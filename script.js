@@ -12,6 +12,11 @@ $(document).ready(function () {
     });
   }
 
+  function stripHtml(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  }
+
   // Function to display posts for the current page
   function displayCurrentPage() {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -28,7 +33,7 @@ $(document).ready(function () {
             `);
       $postItem.click(function () {
         const title = post.nama;
-        const body = post.keterangan;
+        const body = stripHtml(post.keterangan);
         const audioUrl = post.audio; // Replace with actual audio URL
         $("#popupTitle").text(title);
         $("#popupBody").text(body);
