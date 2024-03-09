@@ -11,12 +11,20 @@ $(document).ready(function () {
   function displayPosts(posts) {
     $("#posts").empty();
     posts.forEach(function (post) {
-      $("#posts").append(
-        `<div class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+      const $postItem = $(`
+                <div class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 cursor-pointer">
                     <h2 class="text-lg font-semibold mb-2">${post.nama}</h2>
-                    <p class="text-gray-600">${post.ayat}</p>
-                </div>`
-      );
+                    <p class="text-gray-600 hidden">${post.ayat}</p>
+                </div>
+            `);
+      $postItem.click(function () {
+        const title = post.nama;
+        const body = post.ayat;
+        $("#popupTitle").text(title);
+        $("#popupBody").text(body);
+        $("#popup").removeClass("hidden");
+      });
+      $("#posts").append($postItem);
     });
   }
 
@@ -25,13 +33,20 @@ $(document).ready(function () {
     url: "https://api.npoint.io/99c279bb173a6e28359c/data",
     method: "GET",
     success: function (posts) {
-      displayPosts(posts);
+      let filteredPosts = posts;
+
+      displayPosts(filteredPosts);
 
       // Event listener for search input
       $("#searchInput").on("input", function () {
         const query = $(this).val();
-        const filteredPosts = filterPosts(posts, query);
+        filteredPosts = filterPosts(posts, query);
         displayPosts(filteredPosts);
+      });
+
+      // Event listener to close popup
+      $("#closePopup").click(function () {
+        $("#popup").addClass("hidden");
       });
     },
     error: function () {
