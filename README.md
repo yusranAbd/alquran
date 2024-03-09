@@ -15,4 +15,5 @@ Website saya buat menggunakan API : https://api.npoint.io/99c279bb173a6e28359c/d
 - Dark Mode
 - Responsive Untuk Mobile
 - menambahkan Ayat + terjemahan
+- filter berdasarkan JUZ
 
