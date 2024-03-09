@@ -2,8 +2,7 @@
 # Pecinta Al-Qur'an
 
 Website saya buat menggunakan API : https://api.npoint.io/99c279bb173a6e28359c/data
-website ini masih akan terus saya improve. masih jelek hehe
-
+, website ini saya but menggunakan salah satu konsep javascrip yaitu AJAX.
 
 ## Features
 
