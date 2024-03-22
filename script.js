@@ -1,23 +1,22 @@
-// API : https://api.npoint.io/99c279bb173a6e28359c/data
-
 $(document).ready(function () {
-  const itemsPerPage = 8; // Number of posts per page
-  let currentPage = 1; // Current page number
-  let filteredPosts = []; // Filtered posts
+  const itemsPerPage = 8; // Jumlah Post Per halaman
+  let currentPage = 1; // Page default/ halaman pertama
+  let filteredPosts = []; // filter post
 
-  // Function to filter posts based on search input
+  // Fungsi untuk memfilter post berdasarkan masukan input dari user
   function filterPosts(posts, query) {
     return posts.filter(function (post) {
       return post.nama.toLowerCase().includes(query.toLowerCase());
     });
   }
 
+  // Fungsi ini untuk menghapus tag HTML didalam text, yang nanti digunakan diketerangan ayat
   function stripHtml(html) {
     const doc = new DOMParser().parseFromString(html, "text/html");
     return doc.body.textContent || "";
   }
 
-  // Function to display posts for the current page
+  // Fungsi untuk menampilkan post
   function displayCurrentPage() {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -44,39 +43,44 @@ $(document).ready(function () {
     });
   }
 
-  // Function to display pagination
-  function displayPagination() {
-    const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
+  // Fungsi untuk menampilkan nomor halaman
+  function displayPagination(totalPages) {
     $("#pagination").empty();
     for (let i = 1; i <= totalPages; i++) {
       const $pageButton = $(
-        `<button class="mx-2 py-1 px-3 rounded-full border border-gray-300 bg-white hover:bg-gray-100 focus:outline-none">${i}</button>`
+        `<button class="page-btn mx-2 py-1 px-3 rounded-full border border-gray-300 bg-white hover:bg-gray-100 focus:outline-none">${i}</button>`
       );
+      if (i === currentPage) {
+        $pageButton.addClass("active");
+      }
       $pageButton.click(function () {
         currentPage = i;
         displayCurrentPage();
+        displayPagination(totalPages);
       });
       $("#pagination").append($pageButton);
     }
   }
 
-  // Fetch posts from API
+  // Fetching Api
   $.ajax({
     url: "https://api.npoint.io/99c279bb173a6e28359c/data",
     method: "GET",
     success: function (posts) {
       filteredPosts = posts;
+      const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
 
       displayCurrentPage();
-      displayPagination();
+      displayPagination(totalPages);
 
       // Event listener for search input
       $("#searchInput").on("input", function () {
         const query = $(this).val();
         filteredPosts = filterPosts(posts, query);
         currentPage = 1; // Reset to first page when filtering
+        const newTotalPages = Math.ceil(filteredPosts.length / itemsPerPage);
         displayCurrentPage();
-        displayPagination();
+        displayPagination(newTotalPages);
       });
 
       // Event listener to close popup
